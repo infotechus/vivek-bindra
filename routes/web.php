@@ -13,13 +13,36 @@
 
 $api = app('Dingo\Api\Routing\Router');
 
+//Route::group(['namespace' => 'App\Http\Controllers',], function ($api) {
+//    Route::post('/signUp', function(){
+//        //['as' => 'user.index', 'uses' => 'UserController@signUp']
+//        return 'done';
+//    });
+//    
+//});
 
 $api->version('v1', function ($api) {
-    $api->get('hello', function(){
-        return 'hello';
+    
+    
+    $api->group(['namespace' => 'App\Http\Controllers'], function ($api) {
+        
+         $api->post('/signUp', ['as' => 'user.index', 'uses' => 'UserController@signUp']);
+         
+         $api->get('/user/activation/{tokenId}', ['as' => 'user.index', 'uses' => 'UserController@userActivation']);
+         
+         $api->post('/signUp', ['as' => 'user.index', 'uses' => 'AuthController@authenticate']);
     });
+    
+    // For login purpose
+    $api->group(['namespace' => 'Auth'], function ($api) {
+        
+         $api->post('/authenticate', ['as' => 'user.authenticate', 'uses' => 'AuthController@authenticate']);
+         
+    });
+    
+   
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
